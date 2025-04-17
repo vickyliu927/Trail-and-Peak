@@ -1,95 +1,125 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Layout from '../components/Layout'
+import PostCard from '../components/PostCard'
+import Image from 'next/image'
+import Link from 'next/link'
+import { createClient } from '@sanity/client'
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+// Create a new Sanity client
+const client = createClient({
+    projectId: '48tlul12',
+    dataset: 'production',
+    useCdn: false,
+    apiVersion: '2024-03-21',
+})
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+// Add revalidation settings
+export const revalidate = 0; // This ensures the page is revalidated on every request
+
+async function getFeaturedStories() {
+    try {
+        // Query posts where featured is true
+        const posts = await client.fetch(`
+            *[_type == "post" && featured == true] {
+                _id,
+                title,
+                author,
+                publishedAt,
+                description,
+                "slug": slug.current
+            }
+        `)
+        console.log('Featured posts from Sanity:', posts)
+        return posts
+    } catch (error) {
+        console.error('Error fetching stories:', error)
+        return []
+    }
+}
+
+export default async function Home() {
+    const featuredStories = await getFeaturedStories()
+    
+    return (
+        <Layout>
+            {/* Hero Section */}
+            <section className="hero">
+                <Image 
+                    src="/images/hero-trail-running.jpg" 
+                    alt="Woman trail running in mountains"
+                    fill
+                    className="hero-image"
+                    priority
+                />
+                <div className="hero-content">
+                    <h1>Where Running Meets <span className="keyword">Climbing</span></h1>
+                    <p>Stories from athletes who push their limits on roads, trails and mountains</p>
+                    <button className="cta-button">Read Latest Stories</button>
+                </div>
+            </section>
+
+            {/* Featured Stories */}
+            <section className="featured-posts">
+                <h2>Featured <span className="keyword">Stories</span></h2>
+                <div className="post-grid">
+                    {featuredStories && featuredStories.length > 0 ? (
+                        featuredStories.map((post) => (
+                            <PostCard 
+                                key={post._id}
+                                title={post.title}
+                                author={post.author}
+                                date={new Date(post.publishedAt).toLocaleDateString()}
+                                description={post.description}
+                                slug={post.slug}
+                            />
+                        ))
+                    ) : (
+                        <>
+                            <p>No featured stories yet. Add some in Sanity Studio!</p>
+                        </>
+                    )}
+                </div>
+            </section>
+
+            {/* Categories */}
+            <section className="categories">
+                <h2>Explore <span className="keyword">Categories</span></h2>
+                <div className="category-grid">
+                    <Link href="/categories/trail-running" className="category-card">
+                        <div>
+                            <i className="fas fa-mountain"></i>
+                            <h3>Trail Running</h3>
+                        </div>
+                    </Link>
+                    <Link href="/categories/road-running" className="category-card">
+                        <div>
+                            <i className="fas fa-road"></i>
+                            <h3>Road Running</h3>
+                        </div>
+                    </Link>
+                    <Link href="/categories/mountain-climbing" className="category-card">
+                        <div>
+                            <i className="fas fa-hiking"></i>
+                            <h3>Mountain Climbing</h3>
+                        </div>
+                    </Link>
+                    <Link href="/categories/bouldering" className="category-card">
+                        <div>
+                            <i className="fas fa-hand-rock"></i>
+                            <h3>Bouldering</h3>
+                        </div>
+                    </Link>
+                </div>
+            </section>
+
+            {/* Newsletter */}
+            <section className="newsletter">
+                <h2>Stay <span className="keyword">Updated</span></h2>
+                <p>Subscribe to our newsletter for the latest stories and tips</p>
+                <form className="newsletter-form">
+                    <input type="email" placeholder="Enter your email" />
+                    <button type="submit">Subscribe</button>
+                </form>
+            </section>
+        </Layout>
+    )
 }
