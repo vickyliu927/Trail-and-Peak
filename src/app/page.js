@@ -53,7 +53,9 @@ export default async function Home() {
                 <div className="hero-content">
                     <h1>Where Running Meets <span className="keyword">Climbing</span></h1>
                     <p>Stories from athletes who push their limits on roads, trails and mountains</p>
-                    <button className="cta-button">Read Latest Stories</button>
+                    <Link href="/stories">
+                        <button className="cta-button">Read Latest Stories</button>
+                    </Link>
                 </div>
             </section>
 

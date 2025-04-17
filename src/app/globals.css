@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@400;500;600;700;800&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
 :root {
@@ -72,9 +72,16 @@ nav {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+}
+
 .logo h1 {
   font-family: 'Fraunces', serif;
   color: var(--primary-color);
+  font-size: 1.5rem;
+  margin: 0;
 }
 
 nav ul {
@@ -317,9 +324,74 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-h1, h2, h3, .keyword {
-  font-family: var(--font-bold);
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.75rem;
   font-weight: 600;
+}
+
+h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Sanity Block Content Styles */
+.block-content h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.block-content h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.block-content h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.block-content h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.block-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.block-content blockquote {
+  border-left: 4px solid var(--secondary-color);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
 }
 
 /* Category Pages */

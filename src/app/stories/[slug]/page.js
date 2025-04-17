@@ -76,12 +76,28 @@ export default async function ArticlePage({ params }) {
 
                 <div className={styles['article-content']}>
                     <p className="text-xl mb-8">{post.description}</p>
-                    {post.body && post.body.map((block, index) => {
-                        if (block._type === 'block') {
-                            return <p key={index}>{block.children[0].text}</p>
-                        }
-                        return null
-                    })}
+                    <div className="block-content">
+                        {post.body && post.body.map((block, index) => {
+                            if (block._type === 'block') {
+                                // Handle different block styles
+                                switch (block.style) {
+                                    case 'h1':
+                                        return <h1 key={index}>{block.children[0].text}</h1>;
+                                    case 'h2':
+                                        return <h2 key={index}>{block.children[0].text}</h2>;
+                                    case 'h3':
+                                        return <h3 key={index}>{block.children[0].text}</h3>;
+                                    case 'h4':
+                                        return <h4 key={index}>{block.children[0].text}</h4>;
+                                    case 'blockquote':
+                                        return <blockquote key={index}>{block.children[0].text}</blockquote>;
+                                    default:
+                                        return <p key={index}>{block.children[0].text}</p>;
+                                }
+                            }
+                            return null;
+                        })}
+                    </div>
                 </div>
             </article>
         </Layout>
